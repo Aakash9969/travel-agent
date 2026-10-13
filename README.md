@@ -209,6 +209,37 @@ both provider formats.
 | `agent_memory.json` | Created automatically on first run |
 | `itineraries/` | Created automatically — `.ics` files from approved bookings |
 
+## Deploying to the internet
+
+**This is a Python backend, not a static site — Netlify/Vercel/GitHub Pages
+cannot run it** (they only serve static files, so every `/api/*` call would
+404 and you'd see "page not found" or a dead UI). Deploy to a host that
+runs Python web services:
+
+**Render (easiest, has a free tier):**
+
+1. Push this repo to GitHub (done).
+2. https://dashboard.render.com → **New → Blueprint** → select
+   `travel-agent` → the included `render.yaml` configures everything.
+3. In the dashboard, fill in the env vars it prompts for:
+   `NVIDIA_API_KEY`, `AMADEUS_CLIENT_ID`, `AMADEUS_CLIENT_SECRET`.
+   (Keys live in the dashboard, never in git.)
+4. Deploy → your app gets a `https://travel-agent-xxxx.onrender.com` URL
+   serving both the UI and the API from one origin.
+
+**Anywhere with Docker (Railway, Fly.io, Hugging Face Spaces, a VPS):**
+the included `Dockerfile` builds and runs the app; it respects `$PORT`.
+
+Notes for cloud deploys:
+- The free Render tier spins the service down after inactivity — the first
+  request after a pause takes ~30s to cold-start.
+- The in-conversation session and `agent_memory.json` live on the
+  instance's ephemeral disk: they reset when the service restarts or
+  redeploys. Long-term memory persistence across deploys would need an
+  external store (a database) — fine for a demo, worth knowing about.
+- A thinking model like GLM on NVIDIA NIM takes 30–90s per turn — the UI's
+  "thinking… Ns" counter keeps you informed.
+
 ## Troubleshooting
 
 - **Blank page / 404 at localhost:8000** — make sure `frontend/index.html`

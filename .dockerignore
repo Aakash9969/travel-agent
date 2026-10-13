@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+agent_memory.json
+itineraries/
+.git/

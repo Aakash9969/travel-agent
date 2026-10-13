@@ -1,0 +1,22 @@
+# Render blueprint: deploy the whole app (FastAPI backend + frontend it
+# serves) as one web service. Create a "Blueprint" deployment at
+# https://dashboard.render.com/select-repo and the env vars marked
+# sync:false get set in the dashboard (never in git).
+services:
+  - type: web
+    name: travel-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.4
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_MODEL
+        value: z-ai/glm-5.3-flash
+      - key: AMADEUS_CLIENT_ID
+        sync: false
+      - key: AMADEUS_CLIENT_SECRET
+        sync: false
