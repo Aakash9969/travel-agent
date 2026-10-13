@@ -1,0 +1,11 @@
+# Secrets - never commit
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Agent state generated at runtime
+agent_memory.json
+itineraries/
